@@ -20,23 +20,30 @@ public class CrazyMorse : MonoBehaviour {
 
 	private const float TIME_LONG = 1.5f;
 	private const float TIME_SHORT = 0.5f;
-	private const float TIME_BETWEEN_SYMBOLS = 0.5f;
+	private const float TIME_BETWEEN_PHRASES = 0.5f;
 	private const float TIME_AFFIXES = 3f;
 	private const float TIME_SPACES = 1.5f;
 
-	private class Symbol {
+	private class Phrase {
 		public string Text;
 		public float Time;
+		public char Value;
 
-		public Symbol(string text, float time) {
+		public Phrase(string text, float time, char value) {
 			Text = text;
 			Time = time;
+			Value = value;
 		}
 	}
-	private class Space : Symbol {
+	private class Symbol : Phrase {
+		public Symbol(string text, float time, char value) : base(text, time, value) {
+			
+		}
+	}
+	private class Space : Phrase {
 		public int Shift;
 
-		public Space(string text, int shift) : base(text, TIME_SPACES) {
+		public Space(string text, int shift) : base(text, TIME_SPACES, 'S') {
 			Shift = shift;
 		}
 	}
@@ -45,10 +52,10 @@ public class CrazyMorse : MonoBehaviour {
 		ReverseLetters,
 		ReverseSymbols
 	}
-	private class Affix : Symbol {
+	private class Affix : Phrase {
 		public Orderings Ordering;
 
-		public Affix(string text, Orderings ordering) : base(text, TIME_AFFIXES) {
+		public Affix(string text, Orderings ordering) : base(text, TIME_AFFIXES, 'R') {
 			Ordering = ordering;
 		}
 	}
@@ -64,33 +71,33 @@ public class CrazyMorse : MonoBehaviour {
 
 	// Table 1
 	private readonly Symbol[] SYMBOL_DOTS = {
-		new Symbol("Dot", TIME_LONG), new Symbol("Um", TIME_LONG), new Symbol("Echo", TIME_LONG),
-		new Symbol("Tango", TIME_SHORT),
-		new Symbol("Dit", TIME_SHORT), new Symbol("Dit", TIME_LONG), new Symbol("Iddy", TIME_SHORT), new Symbol("Up", TIME_SHORT),
-		new Symbol("Dah", TIME_SHORT), new Symbol("Dah", TIME_LONG), new Symbol("Umpty", TIME_SHORT), new Symbol("Down", TIME_SHORT),
-		new Symbol("Short", TIME_SHORT), new Symbol("Short", TIME_LONG), new Symbol("Period", TIME_SHORT), new Symbol("Period", TIME_LONG), new Symbol("Top", TIME_LONG),
-		new Symbol("Long", TIME_SHORT),
-		new Symbol(".", TIME_SHORT), new Symbol("🡩", TIME_LONG),
-		new Symbol("Boop", TIME_SHORT), new Symbol("-", TIME_SHORT), new Symbol("🡫", TIME_SHORT), new Symbol("🡫", TIME_LONG),
-		new Symbol("Up", TIME_SHORT), new Symbol("Up", TIME_SHORT),
-		new Symbol("Zero", TIME_LONG), new Symbol("E", TIME_LONG),
-		new Symbol("One", TIME_SHORT), new Symbol("long circle", TIME_SHORT),
-		new Symbol("Low", TIME_SHORT), new Symbol("0", TIME_SHORT),
-		new Symbol("High", TIME_LONG), new Symbol("long square", TIME_SHORT), new Symbol("long square", TIME_LONG), new Symbol("1", TIME_SHORT)
+		new Symbol("Dot", TIME_LONG, '.'), new Symbol("Um", TIME_LONG, '.'), new Symbol("Echo", TIME_LONG, '.'),
+		new Symbol("Tango", TIME_SHORT, '.'),
+		new Symbol("Dit", TIME_SHORT, '.'), new Symbol("Dit", TIME_LONG, '.'), new Symbol("Iddy", TIME_SHORT, '.'), new Symbol("Up", TIME_SHORT, '.'),
+		new Symbol("Dah", TIME_SHORT, '.'), new Symbol("Dah", TIME_LONG, '.'), new Symbol("Umpty", TIME_SHORT, '.'), new Symbol("Down", TIME_SHORT, '.'),
+		new Symbol("Short", TIME_SHORT, '.'), new Symbol("Short", TIME_LONG, '.'), new Symbol("Period", TIME_SHORT, '.'), new Symbol("Period", TIME_LONG, '.'), new Symbol("Top", TIME_LONG, '.'),
+		new Symbol("Long", TIME_SHORT, '.'),
+		new Symbol(".", TIME_SHORT, '.'), new Symbol("🡩", TIME_LONG, '.'),
+		new Symbol("Boop", TIME_SHORT, '.'), new Symbol("-", TIME_SHORT, '.'), new Symbol("🡫", TIME_SHORT, '.'), new Symbol("🡫", TIME_LONG, '.'),
+		new Symbol("Up", TIME_SHORT, '.'), new Symbol("Up", TIME_SHORT, '.'),
+		new Symbol("Zero", TIME_LONG, '.'), new Symbol("E", TIME_LONG, '.'),
+		new Symbol("One", TIME_SHORT, '.'), new Symbol("long circle", TIME_SHORT, '.'),
+		new Symbol("Low", TIME_SHORT, '.'), new Symbol("0", TIME_SHORT, '.'),
+		new Symbol("High", TIME_LONG, '.'), new Symbol("long square", TIME_SHORT, '.'), new Symbol("long square", TIME_LONG, '.'), new Symbol("1", TIME_SHORT, '.')
 	};
 	private readonly Symbol[] SYMBOL_DASHES = {
-		new Symbol("Dot", TIME_SHORT), new Symbol("Um", TIME_SHORT), new Symbol("Echo", TIME_SHORT),
-		new Symbol("Dash", TIME_SHORT), new Symbol("Dash", TIME_LONG), new Symbol("Uhh", TIME_SHORT), new Symbol("Uhh", TIME_LONG), new Symbol("Tango", TIME_LONG),
-		new Symbol("Iddy", TIME_LONG), new Symbol("Up", TIME_LONG),
-		new Symbol("Umpty", TIME_LONG), new Symbol("Down", TIME_LONG),
-		new Symbol("Top", TIME_SHORT),
-		new Symbol("Long", TIME_LONG), new Symbol("Hyphen", TIME_SHORT), new Symbol("Hyphen", TIME_LONG), new Symbol("Bottom", TIME_SHORT), new Symbol("Bottom", TIME_LONG),
-		new Symbol("Beep", TIME_SHORT), new Symbol("Beep", TIME_LONG),new Symbol(".", TIME_LONG), new Symbol("🡩", TIME_SHORT),
-		new Symbol("Boop", TIME_LONG), new Symbol("-", TIME_LONG),
-		new Symbol("Zero", TIME_SHORT), new Symbol("short circle", TIME_SHORT), new Symbol("short circle", TIME_LONG), new Symbol("E", TIME_SHORT),
-		new Symbol("One", TIME_LONG), new Symbol("long circle", TIME_LONG), new Symbol("T", TIME_SHORT), new Symbol("T", TIME_LONG),
-		new Symbol("Low", TIME_LONG), new Symbol("short square", TIME_SHORT), new Symbol("short square", TIME_LONG), new Symbol("0", TIME_LONG),
-		new Symbol("High", TIME_SHORT), new Symbol("1", TIME_LONG)
+		new Symbol("Dot", TIME_SHORT, '-'), new Symbol("Um", TIME_SHORT, '-'), new Symbol("Echo", TIME_SHORT, '-'),
+		new Symbol("Dash", TIME_SHORT, '-'), new Symbol("Dash", TIME_LONG, '-'), new Symbol("Uhh", TIME_SHORT, '-'), new Symbol("Uhh", TIME_LONG, '-'), new Symbol("Tango", TIME_LONG, '-'),
+		new Symbol("Iddy", TIME_LONG, '-'), new Symbol("Up", TIME_LONG, '-'),
+		new Symbol("Umpty", TIME_LONG, '-'), new Symbol("Down", TIME_LONG, '-'),
+		new Symbol("Top", TIME_SHORT, '-'),
+		new Symbol("Long", TIME_LONG, '-'), new Symbol("Hyphen", TIME_SHORT, '-'), new Symbol("Hyphen", TIME_LONG, '-'), new Symbol("Bottom", TIME_SHORT, '-'), new Symbol("Bottom", TIME_LONG, '-'),
+		new Symbol("Beep", TIME_SHORT, '-'), new Symbol("Beep", TIME_LONG, '-'),new Symbol(".", TIME_LONG, '-'), new Symbol("🡩", TIME_SHORT, '-'),
+		new Symbol("Boop", TIME_LONG, '-'), new Symbol("-", TIME_LONG, '-'),
+		new Symbol("Zero", TIME_SHORT, '-'), new Symbol("short circle", TIME_SHORT, '-'), new Symbol("short circle", TIME_LONG, '-'), new Symbol("E", TIME_SHORT, '-'),
+		new Symbol("One", TIME_LONG, '-'), new Symbol("long circle", TIME_LONG, '-'), new Symbol("T", TIME_SHORT, '-'), new Symbol("T", TIME_LONG, '-'),
+		new Symbol("Low", TIME_LONG, '-'), new Symbol("short square", TIME_SHORT, '-'), new Symbol("short square", TIME_LONG, '-'), new Symbol("0", TIME_LONG, '-'),
+		new Symbol("High", TIME_SHORT, '-'), new Symbol("1", TIME_LONG, '-')
 	};
 	// Table 2
 	private readonly Space[] SPACES = {
@@ -119,26 +126,32 @@ public class CrazyMorse : MonoBehaviour {
 	// Table 5
 	private readonly int[] DOT_OCCURENCES = { 8, 1, 7, 5 };
 	private readonly int[] DASH_OCCURENCES = { 9, 6, 3, 4 };
-	private readonly int[] SUBMIT_OCCURENCES = { 5, 1, 3, 2 };
+	private readonly int[] SUBMIT_OCCURENCES = { 2, 1, 3, 2 };
 	// Appendix
 	private readonly string[] MORSE_CODE = new string[26] { ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---", "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--.." };
 
+	private int DotOccurencesTotal = 0;
+	private int DashOccurencesTotal = 0;
+	private int InputsSoFar = 0;
+	private string Input = "";
+	private string CorrectInput;
+
+	List<Phrase> Sequence = new List<Phrase>();
+	List<int> OccurencesList = new List<int>();
+	int Position;
+
+
 	void Awake () {
 		ModuleId = ModuleIdCounter++;
-		/*
-		foreach (KMSelectable object in keypad) {
-			object.OnInteract += delegate () { keypadPress(object); return false; };
-		}
-		*/
 		
-		//button.OnInteract += delegate () { buttonPress(); return false; };
-		
+		Button.OnInteract += delegate () { ButtonPress(); return false; };
 	}
 	
 	void Start () {
 		Word cipherWord = WORDS[Rnd.Range(0, WORDS.Length)];
+		CorrectInput = MORSE_CODE[cipherWord.Letter - 'A'];
 
-		List<Symbol> phrase = new List<Symbol>();
+		
 		List<Space> spaces = new List<Space>();
 		List<int> positionsOfSpaces = new List<int>();
 
@@ -146,10 +159,12 @@ public class CrazyMorse : MonoBehaviour {
 		bool reverseLetters = affix.Ordering == Orderings.ReverseLetters;
 		bool reverseSymbols = affix.Ordering == Orderings.ReverseSymbols || affix.Ordering == Orderings.ReverseLetters;
 
+		Debug.Log(cipherWord.Text);
+		Debug.Log(CorrectInput);
+
 		Debug.Log(reverseLetters);
 		Debug.Log(reverseSymbols);
-
-		Debug.Log(cipherWord.Text);
+		
 		for ( int charIter = 0; charIter < cipherWord.Text.Length; charIter++ ) {
 			int charPlace = reverseLetters ? cipherWord.Text.Length - charIter - 1 : charIter;
 			string morseEquivalent = MORSE_CODE[cipherWord.Text[charPlace] - 'A'];
@@ -166,21 +181,21 @@ public class CrazyMorse : MonoBehaviour {
 					symbol = SYMBOL_DASHES[Rnd.Range(0, SYMBOL_DASHES.Length)];
 				}
 				Debug.Log("Symbol: " + symbol.Text + " " + symbol.Time.ToString() + " (" + value + ")");
-				phrase.Add(symbol);
+				Sequence.Add(symbol);
 			}
 			if ( charIter != cipherWord.Text.Length - 1 ) {
 				Space space = SPACES[Rnd.Range(0, SPACES.Length)];
 				Debug.Log("Space: " + space.Text);
 				spaces.Add(space);
-				positionsOfSpaces.Add(phrase.Count - space.Shift);
+				positionsOfSpaces.Add(Sequence.Count - space.Shift);
 			} else {
 				Debug.Log(affix.Text);
-				phrase.Add(affix);
+				Sequence.Add(affix);
 			}
 		}
 		// handle space shifts
 		List<int> positionsAddedSoFar = new List<int>();
-		int phraseLengthWithoutSpaces = phrase.Count;
+		int phraseLengthWithoutSpaces = Sequence.Count;
 		for ( int i = 0; i < spaces.Count;  i++ ) {
 			Space space = spaces[i];
 			int position = positionsOfSpaces[i];
@@ -190,23 +205,65 @@ public class CrazyMorse : MonoBehaviour {
 			positionsAddedSoFar.Add(position);
 			foreach (int positionAddedSoFar in positionsAddedSoFar) if (positionAddedSoFar <= position) position += 1;
 			position--; // to account for it finding itself
-			phrase.Insert(position, space);
+			Sequence.Insert(position, space);
 		}
 
-		StartCoroutine(CycleCoroutine(phrase));
+		int dotsSoFar = 0;
+		int dashesSoFar = 0;
+		int spacesSoFar = 0;
+		foreach (Phrase phrase in Sequence) {
+			switch (phrase.Value) {
+				case '.': OccurencesList.Add(dotsSoFar++); break;
+				case '-': OccurencesList.Add(dashesSoFar++); break;
+				case 'S': OccurencesList.Add(spacesSoFar++); break;
+				default: break;
+			}
+		}
+		DotOccurencesTotal = dotsSoFar;
+		DashOccurencesTotal = dashesSoFar;
+
+		StartCoroutine(CycleCoroutine());
 	}
 	
 	void Update () {
 		
 	}
 
-	IEnumerator CycleCoroutine(List<Symbol> phrase) {
+	void ButtonPress() {
+		switch (Sequence[Position].Value) {
+			case '.':
+				if (OccurencesList[Position] == (DOT_OCCURENCES[InputsSoFar++] - 1) % DotOccurencesTotal) Input += ".";
+				else Strike();
+				break;
+			case '-':
+				if (OccurencesList[Position] == (DASH_OCCURENCES[InputsSoFar++] - 1) % DashOccurencesTotal) Input += "-";
+				else Strike();
+				break;
+			case 'S':
+				if (OccurencesList[Position] == SUBMIT_OCCURENCES[InputsSoFar++ - 1] - 1 && Input == CorrectInput) GetComponent<KMBombModule>().HandlePass();
+				else Strike();
+				break;
+			default:
+				Input = "";
+				InputsSoFar = 0;
+				break;
+		}
+	}
+
+	void Strike() {
+		Input = "";
+		InputsSoFar = 0;
+		GetComponent<KMBombModule>().HandleStrike();
+	}
+
+	IEnumerator CycleCoroutine() {
 		while (true) {
-			for ( int i = 0; i < phrase.Count; i++ ) {
-				Text.text = phrase[i].Text;
-				yield return new WaitForSeconds(phrase[i].Time);
+			for ( int i = 0; i < Sequence.Count; i++ ) {
+				Position = i;
+				Text.text = Sequence[Position].Text;
+				yield return new WaitForSeconds(Sequence[Position].Time);
 				Text.text = "";
-				yield return new WaitForSeconds(TIME_BETWEEN_SYMBOLS);
+				yield return new WaitForSeconds(TIME_BETWEEN_PHRASES);
 			}
 		}
 	}
