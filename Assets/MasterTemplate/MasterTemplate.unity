@@ -194,11 +194,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!102 &656043796 stripped
-TextMesh:
-  m_PrefabParentObject: {fileID: 102331134379106102, guid: 7eab16c92eb2589479d8029f5f375e82,
-    type: 2}
-  m_PrefabInternal: {fileID: 1547218416}
 --- !u!1 &928192627
 GameObject:
   m_ObjectHideFlags: 0
@@ -264,24 +259,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!114 &1527206824 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114668907275439846, guid: 7eab16c92eb2589479d8029f5f375e82,
-    type: 2}
-  m_PrefabInternal: {fileID: 1547218416}
-  m_Script: {fileID: 1702003387, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
---- !u!114 &1529281574 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114562358367718890, guid: 7eab16c92eb2589479d8029f5f375e82,
-    type: 2}
-  m_PrefabInternal: {fileID: 1547218416}
-  m_Script: {fileID: 2144496390, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
---- !u!114 &1529281575 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114941108734436144, guid: 7eab16c92eb2589479d8029f5f375e82,
-    type: 2}
-  m_PrefabInternal: {fileID: 1547218416}
-  m_Script: {fileID: -1675560866, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
 --- !u!1001 &1547218416
 Prefab:
   m_ObjectHideFlags: 0
@@ -320,34 +297,6 @@ Prefab:
     - target: {fileID: 4900643781706182, guid: 7eab16c92eb2589479d8029f5f375e82, type: 2}
       propertyPath: m_RootOrder
       value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 114635111335308130, guid: 7eab16c92eb2589479d8029f5f375e82,
-        type: 2}
-      propertyPath: button
-      value: 
-      objectReference: {fileID: 1527206824}
-    - target: {fileID: 114635111335308130, guid: 7eab16c92eb2589479d8029f5f375e82,
-        type: 2}
-      propertyPath: text
-      value: 
-      objectReference: {fileID: 656043796}
-    - target: {fileID: 114635111335308130, guid: 7eab16c92eb2589479d8029f5f375e82,
-        type: 2}
-      propertyPath: Bomb
-      value: 
-      objectReference: {fileID: 1529281574}
-    - target: {fileID: 114635111335308130, guid: 7eab16c92eb2589479d8029f5f375e82,
-        type: 2}
-      propertyPath: Audio
-      value: 
-      objectReference: {fileID: 1529281575}
-    - target: {fileID: 4251544884677930, guid: 7eab16c92eb2589479d8029f5f375e82, type: 2}
-      propertyPath: m_LocalScale.x
-      value: 0.015
-      objectReference: {fileID: 0}
-    - target: {fileID: 4251544884677930, guid: 7eab16c92eb2589479d8029f5f375e82, type: 2}
-      propertyPath: m_LocalScale.y
-      value: 0.015
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7eab16c92eb2589479d8029f5f375e82, type: 2}
