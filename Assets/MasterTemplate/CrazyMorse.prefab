@@ -594,8 +594,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Bomb: {fileID: 114562358367718890}
   Audio: {fileID: 114941108734436144}
-  button: {fileID: 114668907275439846}
-  text: {fileID: 102331134379106102}
+  Button: {fileID: 114668907275439846}
+  Text: {fileID: 102331134379106102}
 --- !u!114 &114652525410874132
 MonoBehaviour:
   m_ObjectHideFlags: 1
